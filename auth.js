@@ -10,7 +10,6 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  GithubAuthProvider,
   updateEmail,
   updatePassword,
   deleteUser,
@@ -191,21 +190,6 @@ export const signInWithGoogle = async () => {
     return { success: false, error: message, code: error.code };
   }
 };
-
-// GitHub Sign In
-export const signInWithGithub = async () => {
-  try {
-    const provider = new GithubAuthProvider();
-    provider.addScope('read:user');
-    provider.addScope('user:email');
-    
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    
-    return { success: true, user, message: "Signed in with GitHub successfully!" };
-  } catch (error) {
-    let message = "GitHub sign in failed.";
-    if (error.code === 'auth/popup-blocked') message = "Popup was blocked. Please allow popups for this site.";
     
     return { success: false, error: message, code: error.code };
   }
