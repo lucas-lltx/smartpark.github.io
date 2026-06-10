@@ -1,1 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Top Up Balance - Secure Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .user-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ff3838;
+            transform: translateY(-2px);
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .balance-currency {
+            font-size: 20px;
+            margin-left: 5px;
+        }
+
+        /* Top Up Card */
+        .topup-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Amount Options */
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .amount-btn {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .amount-btn:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+            transform: translateY(-2px);
+        }
+
+        .amount-btn.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Custom Amount Input */
+        .custom-amount {
+            margin-bottom: 25px;
+        }
+
+        .custom-amount label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .custom-amount input {
+            width: 100%;
+            padding: 15px 15px 15px 35px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .custom-amount input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            margin-bottom: 25px;
+        }
+
+        .payment-methods label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .payment-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+        }
+
+        .payment-option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .payment-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .payment-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-topup, .btn-withdraw {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-topup {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-topup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+
+        .btn-withdraw {
+            background: #f8f9fa;
+            color: #ff4757;
+            border: 2px solid #ff4757;
+        }
+
+        .btn-withdraw:hover {
+            background: #ff4757;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-topup:disabled, .btn-withdraw:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Transaction History */
+        .history-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-type {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .transaction-type.topup {
+            color: #28a745;
+        }
+
+        .transaction-type.withdraw {
+            color: #ff4757;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .transaction-amount.positive {
+            color: #28a745;
+        }
+
+        .transaction-amount.negative {
+            color: #ff4757;
+        }
+
+        /* Alert Messages */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-success {
+            background: #28a745;
+        }
+
+        .alert-error {
+            background: #dc3545;
+        }
+
+        .alert-info {
+            background: #17a2b8;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* No Data */
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 0;
+            }
+            
+            .amount-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .balance-amount {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with User Info -->
+        <div class="header">
+            <div class="user-info">
+                <div class="user-details">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="userName">Loading...</div>
+                        <div class="user-email" id="userEmail">Loading...</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-label">Current Balance</div>
+            <div class="balance-amount">
+                $<span id="balanceAmount">0.00</span>
+            </div>
+        </div>
+
+        <!-- Top Up Card -->
+        <div class="topup-card">
+            <div class="section-title">💰 Add Funds</div>
+            
+            <!-- Quick Amount Options -->
+            <div class="amount-options" id="amountOptions">
+                <div class="amount-btn" data-amount="10">$10</div>
+                <div class="amount-btn" data-amount="20">$20</div>
+                <div class="amount-btn" data-amount="50">$50</div>
+                <div class="amount-btn" data-amount="100">$100</div>
+            </div>
+
+            <!-- Custom Amount -->
+            <div class="custom-amount">
+                <label>Custom Amount</label>
+                <div class="amount-input-wrapper">
+                    <span class="currency-symbol">$</span>
+                    <input type="number" id="customAmount" placeholder="Enter amount" min="1" step="1">
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <label>Payment Method</label>
+                <div class="payment-option selected" onclick="selectPayment('credit_card')">
+                    <input type="radio" name="paymentMethod" value="credit_card" checked> 
+                    <span class="payment-icon">💳</span>
+                    <span class="payment-name">Credit / Debit Card</span>
+                </div>
+                <div class="payment-option" onclick="selectPayment('paypal')">
+                    <input type="radio" name="paymentMethod" value="paypal"> 
+                    <span class="payment-icon">🅿️</span>
+                    <span class="payment-name">PayPal</span>
+                </div>
+                <div class="payment-option" onclick="selectPayment('crypto')">
+                    <input type="radio" name="paymentMethod" value="crypto"> 
+                    <span class="payment-icon">₿</span>
+                    <span class="payment-name">Cryptocurrency</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-topup" onclick="processTopUp()">Top Up Now</button>
+                <button class="btn-withdraw" onclick="processWithdraw()">Withdraw</button>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="history-card">
+            <div class="section-title">📜 Transaction History</div>
+            <div id="transactionHistory" class="history-list">
+                <div class="no-data">No transactions yet</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase configuration (Replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables
+        let currentUser = null;
+        let selectedAmount = 10;
+        let selectedPayment = "credit_card";
+        let currentBalance = 0;
+
+        // DOM Elements
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const balanceAmount = document.getElementById('balanceAmount');
+        const customAmountInput = document.getElementById('customAmount');
+        const transactionHistoryDiv = document.getElementById('transactionHistory');
+
+        // Helper Functions
+        function showAlert(message, type = 'info') {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = message;
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Just now';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleString();
+        }
+
+        function formatAmount(amount) {
+            return parseFloat(amount).toFixed(2);
+        }
+
+        // Load user balance and transaction history
+        async function loadUserData(userId) {
+            try {
+                const userRef = doc(db, "users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    currentBalance = userData.balance || 0;
+                    balanceAmount.textContent = formatAmount(currentBalance);
+                    
+                    // Load transaction history
+                    if (userData.transactions && userData.transactions.length > 0) {
+                        displayTransactions(userData.transactions);
+                    } else {
+                        transactionHistoryDiv.innerHTML = '<div class="no-data">No transactions yet</div>';
+                    }
+                } else {
+                    // Create new user document
+                    await setDoc(userRef, {
+                        balance: 0,
+                        transactions: [],
+                        createdAt: serverTimestamp()
+                    });
+                    currentBalance = 0;
+                    balanceAmount.textContent = "0.00";
+                    transactionHistoryDiv.innerHTML = '<div class="no-data">No transactions yet</div>';
+                }
+            } catch (error) {
+                console.error("Error loading user data:", error);
+                showAlert("Failed to load user data", "error");
+            }
+        }
+
+        // Display transaction history
+        function displayTransactions(transactions) {
+            if (!transactions || transactions.length === 0) {
+                transactionHistoryDiv.innerHTML = '<div class="no-data">No transactions yet</div>';
+                return;
+            }
+            
+            // Sort by date (newest first)
+            const sortedTransactions = [...transactions].reverse();
+            
+            transactionHistoryDiv.innerHTML = sortedTransactions.map(transaction => `
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-type ${transaction.type}">
+                            ${transaction.type === 'topup' ? '💰 Top Up' : '💸 Withdraw'}
+                        </div>
+                        <div class="transaction-date">${formatDate(transaction.date)}</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                            ${transaction.paymentMethod ? `via ${transaction.paymentMethod}` : ''}
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${transaction.type === 'topup' ? 'positive' : 'negative'}">
+                        ${transaction.type === 'topup' ? '+' : '-'}$${formatAmount(transaction.amount)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update balance in Firestore
+        async function updateBalance(userId, amount, type, paymentMethod = null) {
+            try {
+                const userRef = doc(db, "users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                let newBalance;
+                let transaction = {
+                    amount: amount,
+                    type: type,
+                    date: serverTimestamp(),
+                    status: 'completed'
+                };
+                
+                if (paymentMethod) {
+                    transaction.paymentMethod = paymentMethod;
+                }
+                
+                if (type === 'topup') {
+                    newBalance = currentBalance + amount;
+                    transaction.description = `Added $${amount} to wallet`;
+                } else {
+                    if (currentBalance < amount) {
+                        showAlert("Insufficient balance!", "error");
+                        return false;
+                    }
+                    newBalance = currentBalance - amount;
+                    transaction.description = `Withdrew $${amount} from wallet`;
+                }
+                
+                await updateDoc(userRef, {
+                    balance: newBalance,
+                    transactions: arrayUnion(transaction)
+                });
+                
+                currentBalance = newBalance;
+                balanceAmount.textContent = formatAmount(currentBalance);
+                
+                // Reload transactions to show the new one
+                const updatedSnap = await getDoc(userRef);
+                if (updatedSnap.exists()) {
+                    displayTransactions(updatedSnap.data().transactions);
+                }
+                
+                return true;
+            } catch (error) {
+                console.error("Error updating balance:", error);
+                showAlert("Transaction failed. Please try again.", "error");
+                return false;
+            }
+        }
+
+        // Process top up
+        window.processTopUp = async function() {
+            if (!currentUser) {
+                showAlert("Please login first", "error");
+                return;
+            }
+            
+            // Get amount (custom or selected)
+            let amount = selectedAmount;
+            const customAmount = parseFloat(customAmountInput.value);
+            
+            if (customAmountInput.value && !isNaN(customAmount) && customAmount > 0) {
+                amount = customAmount;
+            }
+            
+            if (!amount || amount <= 0) {
+                showAlert("Please enter a valid amount", "error");
+                return;
+            }
+            
+            // Show loading state
+            const topupBtn = document.querySelector('.btn-topup');
+            const originalText = topupBtn.innerHTML;
+            topupBtn.innerHTML = '<span class="loading"></span> Processing...';
+            topupBtn.disabled = true;
+            
+            // Simulate payment processing (in real app, integrate with actual payment gateway)
+            setTimeout(async () => {
+                const success = await updateBalance(currentUser.uid, amount, 'topup', selectedPayment);
+                
+                if (success) {
+                    showAlert(`Successfully added $${formatAmount(amount)} to your balance!`, "success");
+                    customAmountInput.value = '';
+                }
+                
+                topupBtn.innerHTML = originalText;
+                topupBtn.disabled = false;
+            }, 1500);
+        };
+        
+        // Process withdraw
+        window.processWithdraw = async function() {
+            if (!currentUser) {
+                showAlert("Please login first", "error");
+                return;
+            }
+            
+            let amount = selectedAmount;
+            const customAmount = parseFloat(customAmountInput.value);
+            
+            if (customAmountInput.value && !isNaN(customAmount) && customAmount > 0) {
+                amount = customAmount;
+            }
+            
+            if (!amount || amount <= 0) {
+                showAlert("Please enter a valid amount", "error");
+                return;
+            }
+            
+            if (amount > currentBalance) {
+                showAlert(`Insufficient balance! Your current balance is $${formatAmount(currentBalance)}`, "error");
+                return;
+            }
+            
+            const withdrawBtn = document.querySelector('.btn-withdraw');
+            const originalText = withdrawBtn.innerHTML;
+            withdrawBtn.innerHTML = '<span class="loading"></span> Processing...';
+            withdrawBtn.disabled = true;
+            
+            setTimeout(async () => {
+                const success = await updateBalance(currentUser.uid, amount, 'withdraw');
+                
+                if (success) {
+                    showAlert(`Successfully withdrew $${formatAmount(amount)}`, "success");
+                    customAmountInput.value = '';
+                }
+                
+                withdrawBtn.innerHTML = originalText;
+                withdrawBtn.disabled = false;
+            }, 1500);
+        };
+        
+        // Select amount from quick options
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAmount = parseFloat(this.dataset.amount);
+                customAmountInput.value = '';
+            });
+        });
+        
+        // Select payment method
+        window.selectPayment = function(method) {
+            selectedPayment = method;
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+                const radio = opt.querySelector('input[type="radio"]');
+                if (radio.value === method) {
+                    opt.classList.add('selected');
+                    radio.checked = true;
+                }
+            });
+        };
+        
+        // Handle logout
+        window.handleLogout = async function() {
+            try {
+                await signOut(auth);
+                showAlert("Logged out successfully", "success");
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            } catch (error) {
+                console.error("Logout error:", error);
+                showAlert("Failed to logout", "error");
+            }
+        };
+        
+        // Listen to auth state
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // Update UI with user info
+                const displayName = user.displayName || user.email.split('@')[0];
+                userName.textContent = displayName;
+                userEmail.textContent = user.email;
+                userAvatar.textContent = displayName.charAt(0).toUpperCase();
+                
+                // Load user data from Firestore
+                await loadUserData(user.uid);
+            } else {
+                // Redirect to login if not authenticated
+                showAlert("Please login to continue", "info");
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        });
+        
+        // Custom amount input handler
+        customAmountInput.addEventListener('input', function() {
+            if (this.value) {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+                selectedAmount = null;
+            }
+        });
+        
+        // Enter key to process topup
+        customAmountInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processTopUp();
+            }
+        });
+    </script>
+</body>
+</html>
