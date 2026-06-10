@@ -1,194 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Parking System - Login</title>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
-
-body{
-    background:#f5f7fb;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.login-container{
-    width:420px;
-    background:white;
-    padding:40px;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
-
-.logo{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.logo-icon{
-    width:70px;
-    height:70px;
-    background:#2563eb;
-    border-radius:16px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin:0 auto 15px;
-    color:white;
-    font-size:32px;
-}
-
-.logo h1{
-    color:#1e293b;
-    font-size:28px;
-}
-
-.logo p{
-    color:#64748b;
-    margin-top:5px;
-}
-
-.form-group{
-    margin-bottom:18px;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:6px;
-    color:#334155;
-    font-weight:600;
-}
-
-.form-group input{
-    width:100%;
-    padding:13px;
-    border:1px solid #dbe2ea;
-    border-radius:10px;
-    font-size:15px;
-}
-
-.form-group input:focus{
-    outline:none;
-    border-color:#2563eb;
-}
-
-.login-btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    background:#2563eb;
-    color:white;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.login-btn:hover{
-    background:#1d4ed8;
-}
-
-.signup-link{
-    text-align:center;
-    margin-top:20px;
-}
-
-.signup-link a{
-    color:#2563eb;
-    text-decoration:none;
-    font-weight:600;
-}
-
-.error{
-    color:#ef4444;
-    margin-top:12px;
-    text-align:center;
-}
-</style>
+<link rel="stylesheet" href="css/style.css">
+<title>Login</title>
 </head>
 
 <body>
 
-<div class="login-container">
+<div class="container">
 
-    <div class="logo">
-        <div class="logo-icon">🅿️</div>
-        <h1>Smart Parking</h1>
-        <p>Parking Management System</p>
-    </div>
+<div class="card">
+<h2>Smart Parking Login</h2>
 
-    <form id="loginForm">
+<form id="loginForm">
 
-        <div class="form-group">
-            <label>Username</label>
-            <input
-                type="text"
-                id="username"
-                placeholder="Enter username"
-                required>
-        </div>
+<input type="email" id="email" placeholder="Email"><br><br>
+<input type="password" id="password" placeholder="Password"><br><br>
 
-        <div class="form-group">
-            <label>Password</label>
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter password"
-                required>
-        </div>
+<button class="primary">Login</button>
 
-        <button type="submit" class="login-btn">
-            Login
-        </button>
+</form>
 
-        <div class="error" id="error"></div>
-
-    </form>
-
-    <div class="signup-link">
-        Don't have an account?
-        <a href="signup.html">Create Account</a>
-    </div>
+<p>No account? <a href="signup.html">Sign up</a></p>
 
 </div>
 
-<script>
+</div>
 
-document.getElementById("loginForm")
-.addEventListener("submit", function(e){
-
-    e.preventDefault();
-
-    const username =
-        document.getElementById("username").value;
-
-    const password =
-        document.getElementById("password").value;
-
-    if(!username || !password){
-        document.getElementById("error")
-        .innerText = "Please fill in all fields.";
-        return;
-    }
-
-    // Firebase login code goes here
-
-    console.log("Login Attempt:");
-    console.log(username);
-
-});
-
-</script>
-
+<script type="module" src="js/login.js"></script>
 </body>
 </html>
