@@ -212,27 +212,6 @@ export const signInWithGithub = async () => {
   }
 };
 
-// Facebook Sign In
-export const signInWithFacebook = async () => {
-  try {
-    const provider = new FacebookAuthProvider();
-    provider.addScope('email');
-    provider.addScope('public_profile');
-    
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    
-    return { success: true, user, message: "Signed in with Facebook successfully!" };
-  } catch (error) {
-    let message = "Facebook sign in failed.";
-    if (error.code === 'auth/popup-blocked') message = "Popup was blocked. Please allow popups for this site.";
-    if (error.code === 'auth/account-exists-with-different-credential') 
-      message = "An account already exists with the same email address but different sign-in method.";
-    
-    return { success: false, error: message, code: error.code };
-  }
-};
-
 // Get Current User (synchronous)
 export const getCurrentUser = () => {
   return auth.currentUser;
